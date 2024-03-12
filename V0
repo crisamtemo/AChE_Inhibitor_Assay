@@ -1,0 +1,21 @@
+# Datos experimentales
+concentraciones = np.array([128, 96, 64, 32, 16, 8, 2])  # Concentración del sustrato en mM
+absorbancia_20_min = np.array([3.3552,	2.6963,	2.0025,	0.8863,	0.4527,	0.1764,	-0.0026])
+absorbancia_10_min = np.array([3.1244,	2.8635,	1.682,	1.0549,	0.4034,	0.2099,	-0.0041])
+
+# Coeficiente de extinción molar y longitud de la celda
+epsilon = 2.78e4  # Coeficiente de extinción molar en 1/(M·cm)
+longitud_celda = 1.0  # Longitud de la celda en cm
+
+# Cálculo de las concentraciones del sustrato
+concentraciones_molar = absorbancia_20_min / (epsilon * longitud_celda)
+concentracion_molar = absorbancia_10_min / (epsilon * longitud_celda)
+
+# Cálculo de las velocidades iniciales (Vo)
+diferencia_tiempo = 10.0  # Diferencia de tiempo en minutos
+vo = (concentraciones_molar - concentracion_molar) / diferencia_tiempo
+
+# Imprimir resultados
+for i in range(len(concentraciones)):
+    print(f"S = {concentraciones[i]} mM - Vo = {vo[i]} mM/min")
+
