@@ -1,0 +1,73 @@
+# Datos experimentales de Sammy para el compuesto A
+
+S = np.array([128,96,64,32,16,8,2]).reshape((-1,1))
+Sam1 = np.array([0.016258273381295,0.0136942446043165,0.00786690647482014,0.00413093525179856,0.0018841726618705,0.000757553956834532,0.000123021582733812])
+Sam2 = np.array([0.0247856115107914,0.0105021582733813,0.00803525179856116,0.000304316546762592,0.00203956834532374,0.000809352517985612,-9.71223021582735E-05])
+Sam3 = np.array([0.00806115107913668,0.0112597122302158,0.00637122302158274,0.00219496402877698,0.00165107913669065,0.00128201438848921,0.000343165467625899])
+
+# Definición de la ecuación de Michaelis-Menten
+def michaelis_menten(S, Vmax, Km):
+    return Vmax / (S + Km)
+
+# Ajuste de la curva a los datos
+#Concentración de 1mm
+model1 = LinearRegression()
+model1.fit( S , Sam1 )
+Vmax_fit1= 1/model1.intercept_
+Km_fit1= model1.coef_
+
+#Concentración de 2mm
+model2 = LinearRegression()
+model2.fit( S , Sam2 )
+Vmax_fit2= 1/model2.intercept_
+Km_fit2= model2.coef_
+
+#Concentración de 4mm
+model3 = LinearRegression()
+model3.fit( S , Sam3 )
+Vmax_fit3= 1/model3.intercept_
+Km_fit3= model3.coef_
+
+print("Vmax calculado para 1mm:", Vmax_fit1)
+print("Vmax calculado para 2mm:", Vmax_fit2)
+print("Vmax calculado para 4mm:", Vmax_fit3)
+print("Km calculado para 1mm:", Km_fit1)
+print("Km calculado para 2mm:", Km_fit2)
+print("Km calculado para 4mm:", Km_fit3)
+
+# Crear un rango de concentraciones de sustrato para la gráfica
+ymin1 = min(Sam1)
+ymin2=  min(Sam2)
+ymin3 = min(Sam3)
+ymax1 = max(Sam1)
+ymax2=  max(Sam2)
+ymax3 = max(Sam3)
+
+ymin, ymax = min(ymin1,ymin2,ymin3), max(ymax1,ymax2,ymax3)
+
+
+# Calcular las velocidades correspondientes utilizando la ecuación de Michaelis-Menten ajustada
+Vo_pred1 = model1.predict (S)
+Vo_pred2 = model2.predict (S)
+Vo_pred3 = model3.predict (S)
+
+# Crear la gráfica
+plt.figure(figsize=(8, 6))
+#primero para concentración de 1mm
+plt.plot(S, Sam1, label='Datos experimentales 1 mM', color='blue')
+plt.plot(S, Vo_pred1, label='Curva ajustada 1 mM', color='Blue',linestyle='dashed')
+#primero para concentración de 2mm
+plt.plot(S, Sam2, label='Datos experimentales 2 mM', color='red')
+plt.plot(S, Vo_pred2, label='Curva ajustada 2 mM', color='red',linestyle='dashed')
+#primero para concentración de 4mm
+plt.plot(S, Sam3, label='Datos experimentales 4 mM', color='green')
+plt.plot(S, Vo_pred3, label='Curva ajustada 4 mM', color='green',linestyle='dashed')
+plt.xlabel('Concentración de Sustrato ([S])')
+plt.ylabel('Velocidad Inicial (Vo)')
+plt.title('Curva del Producto 1 a 1 mM, 2 mM, 4 mM')
+plt.legend()
+plt.grid(True)
+#plt.ylim(ymin *2, 2 * ymax)
+
+# Mostrar la gráfica
+plt.show()
